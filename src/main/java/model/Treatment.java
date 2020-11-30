@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Treatment {
+    private int cid;
     private long tid;
     private long pid;
     private LocalDate date;
@@ -13,8 +14,9 @@ public class Treatment {
     private String description;
     private String remarks;
 
-    public Treatment(long pid, LocalDate date, LocalTime begin,
-                     LocalTime end, String description, String remarks) {
+    public Treatment( long pid, LocalDate date, LocalTime begin,
+                     LocalTime end, String description, String remarks, int cid) {
+        this.cid = cid;
         this.pid = pid;
         this.date = date;
         this.begin = begin;
@@ -24,7 +26,8 @@ public class Treatment {
     }
 
     public Treatment(long tid, long pid, LocalDate date, LocalTime begin,
-                     LocalTime end, String description, String remarks) {
+                     LocalTime end, String description, String remarks, int cid ) {
+        this.cid = cid;
         this.tid = tid;
         this.pid = pid;
         this.date = date;
@@ -37,6 +40,10 @@ public class Treatment {
 
     public long getTid() {
         return tid;
+    }
+
+    public int getCid() {
+        return cid;
     }
 
     public long getPid() {
@@ -53,6 +60,10 @@ public class Treatment {
 
     public String getEnd() {
         return end.toString();
+    }
+
+    public void setCid(int cid){
+        this.cid = cid;
     }
 
     public void setDate(String s_date) {
@@ -88,6 +99,7 @@ public class Treatment {
 
     public String toString() {
         return "\nBehandlung" + "\nTID: " + this.tid +
+                "\nCID: " +this.cid +
                 "\nPID: " + this.pid +
                 "\nDate: " + this.date +
                 "\nBegin: " + this.begin +

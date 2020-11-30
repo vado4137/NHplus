@@ -1,19 +1,24 @@
 package controller;
 
+import datastorage.CaregiverDAO;
 import datastorage.DAOFactory;
 import datastorage.TreatmentDAO;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.Caregiver;
 import model.Patient;
 import model.Treatment;
 import utils.DateConverter;
+
+import javax.xml.catalog.Catalog;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewTreatmentController {
     @FXML
@@ -30,16 +35,53 @@ public class NewTreatmentController {
     private TextArea taRemarks;
     @FXML
     private DatePicker datepicker;
+    @FXML
+    private ComboBox<String> cbCaregiver;
 
     private AllTreatmentController controller;
+    private Caregiver caregiver;
     private Patient patient;
     private Stage stage;
+    private ArrayList<Caregiver> caregiverArrayList;
+
+    private ObservableList<String> myComboBoxData =
+            FXCollections.observableArrayList();
+
 
     public void initialize(AllTreatmentController controller, Stage stage, Patient patient) {
+        cbCaregiver.setItems(myComboBoxData);
+        cbCaregiver.getSelectionModel().select(0);
+
+        createComboBoxData();
+
         this.controller= controller;
         this.patient = patient;
         this.stage = stage;
         showPatientData();
+    }
+
+    private void createComboBoxData(){
+        CaregiverDAO dao = DAOFactory.getDAOFactory().createCaregiverDAO();
+        try {
+            caregiverArrayList = (ArrayList<Caregiver>) dao.readAll();
+            for (Caregiver careGiver: caregiverArrayList) {
+                this.myComboBoxData.add(careGiver.getSurname());
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleComboBox() throws SQLException {
+        String c = this.cbCaregiver.getSelectionModel().getSelectedItem();
+        CaregiverDAO dao = DAOFactory.getDAOFactory().createCaregiverDAO();
+        List<Caregiver> allCaregiver = dao.readAll();
+        for (Caregiver cg : allCaregiver) {
+            if(cg.getSurname().equals(c)) {
+                this.caregiver = cg;
+            }
+        }
     }
 
     private void showPatientData(){
@@ -56,7 +98,7 @@ public class NewTreatmentController {
         String description = txtDescription.getText();
         String remarks = taRemarks.getText();
         Treatment treatment = new Treatment(patient.getPid(), date,
-                begin, end, description, remarks);
+                begin, end, description, remarks, caregiver.getCid());
         createTreatment(treatment);
         controller.readAllAndShowInTableView();
         stage.close();

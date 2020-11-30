@@ -1,11 +1,13 @@
 package controller;
 
+import datastorage.CaregiverDAO;
 import datastorage.DAOFactory;
 import datastorage.PatientDAO;
 import datastorage.TreatmentDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.Caregiver;
 import model.Patient;
 import model.Treatment;
 import utils.DateConverter;
@@ -32,9 +34,14 @@ public class TreatmentController {
     private Button btnChange;
     @FXML
     private Button btnCancel;
+    @FXML
+    private Label cName;
+    @FXML
+    private Label cTelephone;
 
     private AllTreatmentController controller;
     private Stage stage;
+    private Caregiver caregiver;
     private Patient patient;
     private Treatment treatment;
 
@@ -42,7 +49,9 @@ public class TreatmentController {
         this.stage = stage;
         this.controller= controller;
         PatientDAO pDao = DAOFactory.getDAOFactory().createPatientDAO();
+        CaregiverDAO cdao = DAOFactory.getDAOFactory().createCaregiverDAO();
         try {
+            this.caregiver = cdao.read(treatment.getCid());
             this.patient = pDao.read((int) treatment.getPid());
             this.treatment = treatment;
             showData();
@@ -60,6 +69,7 @@ public class TreatmentController {
         this.txtEnd.setText(this.treatment.getEnd());
         this.txtDescription.setText(this.treatment.getDescription());
         this.taRemarks.setText(this.treatment.getRemarks());
+        this.cName.setText(this.caregiver.getSurname()+", "+ this.caregiver.getFirstName());
     }
 
     @FXML
