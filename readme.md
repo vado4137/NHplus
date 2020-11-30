@@ -45,6 +45,8 @@ In den bisherigen Sprints wurden die Module zur Erfassung der Patienten- und Beh
 
 Wird das Open JDK verwendet, werden JavaFX-Abhängigkeiten nicht importiert. Die Lösung besteht in der Installation der neuesten JDK-Version der Firma Oracle.
 
+Login für die Anwendung Benutzername: test Passwort: test
+
 ## Technische Hinweise zur Datenbank
 
 - Benutzername: SA
